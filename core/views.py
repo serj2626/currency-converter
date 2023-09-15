@@ -6,7 +6,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 response = requests.get(url='https://v6.exchangerate-api.com/v6/57103832bca2b0605120abcf/latest/USD').json()
-# currencies = response.get('conversion_rates')
 CURRENCIES = response.get('conversion_rates')
 
 
@@ -43,7 +42,7 @@ class RatesAPIView(APIView):
         fr = requset.GET.get('from', '')
         to = requset.GET.get('to', '')
         value = requset.GET.get('value', '')
-        print(fr, to, value)
+
         try:
             value = float(value)
         except:
