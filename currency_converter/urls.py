@@ -1,13 +1,13 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from core.views import RatesAPIView, HomeView
+from core.views import HomeView, rates_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',  HomeView.as_view(), name='home'),
-    path('api/rates/', RatesAPIView.as_view(), name='rates'),
+    path('', HomeView.as_view(), name='home'),
+    path('api/rates/', rates_view, name='rates'),
 
 ]
 

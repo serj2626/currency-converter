@@ -4,6 +4,8 @@ from django.views import View
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
 
 response = requests.get(url='https://v6.exchangerate-api.com/v6/57103832bca2b0605120abcf/latest/USD').json()
 CURRENCIES = response.get('conversion_rates')
@@ -36,20 +38,53 @@ class HomeView(View):
 
 
 ###########################  API  #####################################################
+@api_view(['GET'])
+def rates_view(requset):
+    fr = requset.GET.get('from', '')
+    to = requset.GET.get('to', '')
+    value = requset.GET.get('value', '')
 
-class RatesAPIView(APIView):
-    def get(self, requset):
-        fr = requset.GET.get('from', '')
-        to = requset.GET.get('to', '')
-        value = requset.GET.get('value', '')
+    try:
+        value = float(value)
+    except:
+        return Response({"error": "Incorrect value"})
 
-        try:
-            value = float(value)
-        except:
-            return Response({"error": "Incorrect value"})
+    if fr not in CURRENCIES or to not in CURRENCIES:
+        return Response({"error": "Incorrect Currency"})
 
-        if fr not in CURRENCIES or to not in CURRENCIES:
-            return Response({"error": "Incorrect Currency"})
+    converted_amount = round((CURRENCIES[to] / CURRENCIES[fr]) * value, 2)
+    return Response({'result': converted_amount})
 
-        converted_amount = round((CURRENCIES[to] / CURRENCIES[fr]) * value, 2)
-        return Response({'result': converted_amount})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class RatesAPIView(APIView):
+#     def get(self, requset):
+#         fr = requset.GET.get('from', '')
+#         to = requset.GET.get('to', '')
+#         value = requset.GET.get('value', '')
+#
+#         try:
+#             value = float(value)
+#         except:
+#             return Response({"error": "Incorrect value"})
+#
+#         if fr not in CURRENCIES or to not in CURRENCIES:
+#             return Response({"error": "Incorrect Currency"})
+#
+#         converted_amount = round((CURRENCIES[to] / CURRENCIES[fr]) * value, 2)
+#         return Response({'result': converted_amount})
