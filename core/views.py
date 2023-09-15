@@ -48,8 +48,8 @@ class RatesAPIView(APIView):
         except:
             return Response({"error": "Incorrect value"})
 
-        if fr not in CURRENCIES or to not in CURRENCIES:  # or not isinstance(value, (int, float))
+        if fr not in CURRENCIES or to not in CURRENCIES:
             return Response({"error": "Incorrect Currency"})
 
-        converted_amount = round((CURRENCIES[to] / CURRENCIES[fr]) * float(value), 2)
+        converted_amount = round((CURRENCIES[to] / CURRENCIES[fr]) * value, 2)
         return Response({'result': converted_amount})
